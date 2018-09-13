@@ -36,6 +36,14 @@ and:
 
 where `/path/to/pagila` is your localhost directory path to the Pagila database that you just downloaded.
 
+We now have a complete database that contains the following tables:
+
+![alt text][pagila_erd]
+
 ### 3.3. Run some simple queries
 
 ## 4. Create a Quilt package
+
+## References
+
+[pagila_erd]: https://github.com/robnewman/quilt-pagila-data/raw/master/src/assets/images/icon48.png "Pagila Entity Relationship Diagram"
