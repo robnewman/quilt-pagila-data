@@ -1,4 +1,4 @@
-# quilt-kiva-lending-data
+# quilt-pagila-data
 
 ## Goal
 
