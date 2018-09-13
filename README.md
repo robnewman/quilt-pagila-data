@@ -46,4 +46,4 @@ We now have a complete database that contains the following tables:
 
 ## References
 
-[pagila_erd]: https://github.com/robnewman/quilt-pagila-data/raw/master/src/assets/images/icon48.png "Pagila Entity Relationship Diagram"
+[pagila_erd]: https://github.com/robnewman/quilt-pagila-data/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
