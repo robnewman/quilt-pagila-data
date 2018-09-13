@@ -38,7 +38,7 @@ where `/path/to/pagila` is your localhost directory path to the Pagila database 
 
 We now have a complete database that contains the following tables:
 
-![alt text][pagila_erd]
+![Pagila ERD][pagila_erd]
 
 ### 3.3. Run some simple queries
 
@@ -46,4 +46,4 @@ We now have a complete database that contains the following tables:
 
 ## References
 
-[pagila_erd]: https://github.com/robnewman/quilt-pagila-data/raw/master/src/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
+[pagila_erd]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
