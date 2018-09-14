@@ -37,7 +37,7 @@ Python 3.6.5
 
 Finally, install all the Python packages from the `requirements.txt` file in this repository:
 
-`pip install -r requirements.txt`
+`[quilt-py3] pip install -r requirements.txt`
 
 Now you have all you need to work through the rest of this post, _except_ for the data!
 
@@ -57,11 +57,11 @@ If don't already have Postgres installed on your localhost, download a native Ma
 
 You first need to build the database schema. Run the following from the command line:
 
-`"/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-schema.sql`
+`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-schema.sql`
 
 and:
 
-`"/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-insert-data.sql`
+`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-insert-data.sql`
 
 where `/path/to/pagila` is your localhost directory path to the Pagila database that you just downloaded.
 
@@ -169,17 +169,31 @@ Time: 83.096 ms
 
 Everything prior to now has been correctly setting up our environment and getting the data loaded locally. Now we are going to actually _work like a data engineer_ and pull in some real data from the PostgreSQL Pagila database and work with it in a Jupyter notebook.
 
-### 4.1. Make sure your notebook is using your virtual environment kernel
+### 4.1. Ensure your notebooks are using your virtual environment packages by making them available as a kernel
 
 To ensure that all the Python packages that you are using from your virtual environment (my current one is called `quilt-py3`, see above) are available in your notebook, you need to add it to the notebook kernel.
 
-`$ ipython kernel install --user --name=quilt-py3`
+`[quilt-py3] $ ipython kernel install --user --name=quilt-py3`
 
-At this point, you can start Jupyter, create a new notebook and select the new kernel for your environment using the Kernel menu  > Change kernel (red box) > quilt-py3 (blue box):
+### 4.2. Ensure your notebook has the ability to benchmark queries
+
+The whole point of this blog post is to benchmark the performance of SQL vs. Quilt, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. We can use the excellent [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension which displays when the last execution of a code cell occurred, and how long it took. Install with the following command:
+
+`[quilt-py3] $ jupyter contrib nbextension install --user`
+
+To be able to config to use this extension, you need to enable the *extension configurator*.
+
+`[quilt-py3] $ jupyter nbextensions_configurator enable --user`
+
+### 4.3. Fire up your notebook and select your kernel
+
+At this point, you can start Jupyter, create a new notebook and select the new kernel for your environment using the Kernel menu  > Change kernel (<span style="color:red">red box</span>) > quilt-py3 (<span style="color:blue">blue box</span>):
 
 ![Notebook Kernel Selection][notebook_kernel]:
 
-You will see the kernel update in the top-right of the notebook (green box).
+You will see the kernel update in the top-right of the notebook (<span style="color:green">green box</span>).
+
+### 4.4. 
 
 ## 5. Create a Quilt package
 
