@@ -187,4 +187,4 @@ You will see the kernel update in the top-right of the notebook (green box).
 
 [pagila_erd]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
 
-[notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook_kernel.png "Selecting the notebook kernel"
+[notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
