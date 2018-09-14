@@ -12,6 +12,35 @@ We are going to be using data provided by the [Pagila](https://github.com/devrim
 
 Use `git clone https://www.github.com/robnewman/quilt-kiva-lending-data` to get this repository on your localhost.
 
+### 1.1 Build and activate a new virtual environment
+
+To build the virtual environment (called `quilt-py3`) with all the packages used in this post, you need to run the following commands (assuming you have installed Python3 using the [Homebrew](http://brew.sh/) package manager):
+
+First, build a new virtual environment called `quilt-py3`:
+
+`$ python3 -m venv ~/path/to/virtual/environments/quilt-py3`
+
+Next, activate the new environment:
+
+`$ source /path/to/virtual/environments/quilt-py3/bin/activate`
+
+(Depending on how your shell is configured, your command line prompt may automatically update with the virtual environment name as a prefix)
+
+### 1.2. Check that you have a Python3 interpreter installed
+
+```
+[quilt-py3] $ python3 --version
+Python 3.6.5
+```
+
+### 1.3. Install Python packages
+
+Finally, install all the Python packages from the `requirements.txt` file in this repository:
+
+`pip install -r requirements.txt`
+
+Now you have all you need to work through the rest of this post, _except_ for the data!
+
 ## 2. Clone the Pagila database repository
 
 Use `git clone https://github.com/devrimgunduz/pagila.git` to get the data repository on your localhost.
@@ -130,14 +159,32 @@ Timing is on.
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
 -------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
         269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   1.99 | 2017-01-24 21:40:19.996577-08
-....        
+        ....        
         284 | SONIA               | GREGORY            | SONIA.GREGORY@sakilacustomer.org         | Jon              | Stephens        |   0.99 | 2017-01-29 14:59:08.996577-08
-286 | VELMA               | LUCAS              | VELMA.LUCAS@sakilacustomer.org           | Jon              | Stephen
+        286 | VELMA               | LUCAS              | VELMA.LUCAS@sakilacustomer.org           | Jon              | Stephen
 Time: 83.096 ms
 ```
 
-## 4. Create a Quilt package
+## 4. Query the database using a notebook
+
+Everything prior to now has been correctly setting up our environment and getting the data loaded locally. Now we are going to actually _work like a data engineer_ and pull in some real data from the PostgreSQL Pagila database and work with it in a Jupyter notebook.
+
+### 4.1. Make sure your notebook is using your virtual environment kernel
+
+To ensure that all the Python packages that you are using from your virtual environment (my current one is called `quilt-py3`, see above) are available in your notebook, you need to add it to the notebook kernel.
+
+`$ ipython kernel install --user --name=quilt-py3`
+
+At this point, you can start Jupyter, create a new notebook and select the new kernel for your environment using the Kernel menu  > Change kernel (red box) > quilt-py3 (blue box):
+
+![Notebook Kernel Selection][notebook_kernel]:
+
+You will see the kernel update in the top-right of the notebook (green box).
+
+## 5. Create a Quilt package
 
 ## References
 
 [pagila_erd]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
+
+[notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook_kernel.png "Selecting the notebook kernel"
