@@ -10,7 +10,34 @@ We are going to be using data provided by the [Pagila](https://github.com/devrim
 
 ## 1. Clone this repository
 
-Use `git clone https://www.github.com/robnewman/quilt-kiva-lending-data` to get this repository on your localhost.
+Use `git clone https://www.github.com/robnewman/quilt-pagila-data` to get this repository on your localhost.
+
+## 1.1 Project directory structure
+
+Data engineering projects need a sensible (and repeatable) directory structure. This repository follows the recommendations from [Cookie Cutter Data Science](http://drivendata.github.io/cookiecutter-data-science/#directory-structure):
+
+```
+├── LICENSE
+├── README.md
+├── assets
+├── data
+│   ├── external
+│   ├── interim
+│   ├── processed
+│   └── raw
+├── notebooks
+├── packages
+├── requirements.txt
+└── src
+    └── data
+```
+
+There are a couple of minor differences to the recommendation:
+
+1. `assets` is where all the images and other assets for this repository are stored.
+2. `packages` is where we will be storing the Quilt data packages that we generate and work with.
+
+The `data/raw` directory is where we are storing all the data files for building the database we will use during this post.
 
 ### 1.1 Build and activate a new virtual environment
 
@@ -43,11 +70,22 @@ Now you have all you need to work through the rest of this post, _except_ for th
 
 ## 2. Clone the Pagila database repository
 
-Use `git clone https://github.com/devrimgunduz/pagila.git` to get the data repository on your localhost.
+Use `git clone https://github.com/devrimgunduz/pagila.git` to get the data repository on your localhost. Move the files to the `data > raw` directory, so that the contents of the directory look like:
+
+```
+data/raw
+└── pagila
+    ├── pagila-0.10.1
+    │   ├── README
+    │   ├── pagila-data.sql
+    │   ├── pagila-insert-data.sql
+    │   └── pagila-schema.sql
+    └── pagila-0.10.1.zip
+```
 
 ## 3. Create a relational database and add the data
 
-Now we have the data, we are going to add it to a PostgreSQL database.
+Now we have the raw data, we are going to use it to create a tables in the default local PostgreSQL database called `postgres`.
 
 ### 3.1. Installing PostgreSQL
 
@@ -57,19 +95,21 @@ If don't already have Postgres installed on your localhost, download a native Ma
 
 You first need to build the database schema. Run the following from the command line:
 
-`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-schema.sql`
+`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-schema.sql`
 
 and:
 
-`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/pagila/pagila-insert-data.sql`
+`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-insert-data.sql`
 
-where `/path/to/pagila` is your localhost directory path to the Pagila database that you just downloaded.
+where `/path/to/data/raw/pagila` is your localhost directory path to the Pagila database that you just downloaded.
 
-We now have a complete database that contains the following tables:
+We now have a complete database that contains the following tables and relationships:
 
 ![Pagila ERD][pagila_erd]
 
 ### 3.3. Run some simple queries
+
+Let's test that we have the data correctly stored in Postgres  by running some simple queries. This assumes that you have a postgres command line prompt open.
 
 ```
 SELECT
@@ -86,6 +126,9 @@ FROM
 INNER JOIN payment ON payment.customer_id = customer.customer_id
 INNER JOIN staff ON payment.staff_id = staff.staff_id;
 ```
+
+The results:
+
 ```
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
 -------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
@@ -98,11 +141,13 @@ customer_id | customer_first_name | customer_last_name |                  email 
         270 | LEAH                | CURTIS             | LEAH.CURTIS@sakilacustomer.org           | Mike             | Hillyer         |   1.99 | 2017-01-26 05:10:14.996577-08
 ```
 
+Great! We have all the data loaded and accessible.
+
 ### 3.4. Add some benchmarking tools to the SQL prompt
 
 You can do this in a couple of ways:
 
-*Add `EXPLAIN ANALYZE` as the first line to your SQL statement:*
+#### 3.4.1. Add `EXPLAIN ANALYZE` as the first line to your SQL statement
 
 ```
 EXPLAIN ANALYZE
@@ -148,12 +193,16 @@ Execution time: 32.699 ms
 (19 rows)
 ```
 
-*Add the `timing` functionality to the PostgreSQL prompt:*
+#### 3.4.2. Add the `timing` functionality to the PostgreSQL prompt
+
+You can toggle this functionality on and off using the following command:
 
 ```
 postgres=# \timing
 Timing is on.
 ```
+
+Lets take a look at the previous SQL command, with the `timing` flag on:
 
 ```
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
@@ -165,23 +214,25 @@ customer_id | customer_first_name | customer_last_name |                  email 
 Time: 83.096 ms
 ```
 
+Note the ending `Time: 83.096 ms`. That's the nugget of helpful information.
+
 ## 4. Query the database using a notebook
 
-Everything prior to now has been correctly setting up our environment and getting the data loaded locally. Now we are going to actually _work like a data engineer_ and pull in some real data from the PostgreSQL Pagila database and work with it in a Jupyter notebook.
+Everything prior to now has been correctly setting up our environment, downloading data, and getting the data loaded locally into our relational database management system. Now we are going to actually _work like a data engineer_ and pull in some real data from the Pagila database tables and work with it in a Jupyter notebook.
 
 ### 4.1. Ensure your notebooks are using your virtual environment packages by making them available as a kernel
 
-To ensure that all the Python packages that you are using from your virtual environment (my current one is called `quilt-py3`, see above) are available in your notebook, you need to add it to the notebook kernel.
+To ensure that all the Python packages that you are using from your virtual environment (my current one is called `quilt-py3`, see above) are available in your notebook, you need to make it available as a notebook kernel.
 
 `[quilt-py3] $ ipython kernel install --user --name=quilt-py3`
 
 ### 4.2. Ensure your notebook has the ability to benchmark queries
 
-The whole point of this blog post is to benchmark the performance of SQL vs. Quilt, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. We can use the excellent [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension which displays when the last execution of a code cell occurred, and how long it took. Install with the following command:
+The whole point of this blog post is to benchmark the performance of SQL vs. CSV files vs. Quilt, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. A good one is the  [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension. This displays when the last execution of a code cell occurred, and how long it took. Install the suite of user-contributed Jupyter extensions with the following command:
 
 `[quilt-py3] $ jupyter contrib nbextension install --user`
 
-To be able to config to use this extension, you need to enable the *extension configurator*.
+To be able to configure your Jupyter notebooks to use this extension, you need to enable the *extension configurator*:
 
 `[quilt-py3] $ jupyter nbextensions_configurator enable --user`
 
@@ -189,7 +240,7 @@ Now when you start up Jupyter you can select which extensions to enable by check
 
 ![Selecting and enabling specific Nbextensions][notebook_nbextensions]
 
-Ensure you check the `ExecuteTime` (<span style="color:blue">blue box</span>) extension.
+Ensure you check the `ExecuteTime` (<span style="color:blue">blue box</span>) extension to turn it on.
 
 ### 4.3. Fire up your notebook and select your kernel
 
@@ -199,9 +250,34 @@ At this point, you can start Jupyter, create a new notebook and select the new k
 
 You will see the kernel update in the top-right of the notebook (<span style="color:green">green box</span>).
 
-### 4.4.
+## 5. Benchmarking PostgreSQL
 
-## 5. Create a Quilt package
+Now we are able to benchmark our PostgreSQL database tables directly within Jupyter. Provided you have cloned this repository, you should be able to do exactly this by opening the `0.1-robnewman-pagila.ipynb` notebook in the `notebooks` directory.
+
+## 5.1. A note on flushing the cache
+
+In order to correctly benchmark, you need to ensure that all caches are flushed. To do this for Postgres, do the following:
+
+1. Stop the Postgres service: How you do this depends on how you have it setup. Because I am using the Postgres app, I just turn the service off in the GUI:
+
+![Turn off PostgreSQL server][postgres-app-stop]
+
+2. Run `sync`: Running the `sync` command forces completion of any pending disk writes, essentially **flushing the cache**.
+
+## 6. Create a Quilt package
+
+Now we are going to do the same operations in Quilt. Following the [docs](https://docs.quiltdata.com/get-started/step-by-step#build-a-package), we need to first export the unstructured data from Postgres into a CSV file.
+
+### 5.1. Export the data
+
+Let's export just the customer data from the Pagila database into a CSV:
+
+```
+postgres-# \COPY customer TO '/path/to/repository/data/interim/customers.csv' DELIMITER ',' CSV HEADER;
+COPY 599
+Time: 50.701 ms
+```
+
 
 ## References
 
@@ -210,3 +286,5 @@ You will see the kernel update in the top-right of the notebook (<span style="co
 [notebook_nbextensions]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
 
 [notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
+
+[postgres-app-stop]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
