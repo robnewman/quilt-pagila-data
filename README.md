@@ -185,20 +185,28 @@ To be able to config to use this extension, you need to enable the *extension co
 
 `[quilt-py3] $ jupyter nbextensions_configurator enable --user`
 
+Now when you start up Jupyter you can select which extensions to enable by checking boxes in the `Nbextensions` tab (<span style="color:red">red box</span>):
+
+![Selecting and enabling specific Nbextensions][notebook_nbextensions]
+
+Ensure you check the `ExecuteTime` (<span style="color:blue">blue box</span>) extension.
+
 ### 4.3. Fire up your notebook and select your kernel
 
 At this point, you can start Jupyter, create a new notebook and select the new kernel for your environment using the Kernel menu  > Change kernel (<span style="color:red">red box</span>) > quilt-py3 (<span style="color:blue">blue box</span>):
 
-![Notebook Kernel Selection][notebook_kernel]:
+![Notebook Kernel Selection][notebook_kernel]
 
 You will see the kernel update in the top-right of the notebook (<span style="color:green">green box</span>).
 
-### 4.4. 
+### 4.4.
 
 ## 5. Create a Quilt package
 
 ## References
 
 [pagila_erd]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
+
+[notebook_nbextensions]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
 
 [notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
