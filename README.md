@@ -49,7 +49,7 @@ To build the virtual environment (called `quilt-py3`) with all the packages used
 First, build a new virtual environment called `quilt-py3`:
 
 ```bash
-$ python3 -m venv ~/path/to/virtual/environments/quilt-py3
+$ python3 -m venv /path/to/virtual/environments/quilt-py3
 ```
 
 Next, activate the new environment:
