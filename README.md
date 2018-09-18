@@ -364,15 +364,22 @@ Now we're ready to use the data package in our Jupyter notebook. We `import` it 
 
 ![Select all payments using Quilt data package][quilt-select-all-payments]
 
-The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **35ms**
+The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **126ms**
 
-You immediately see **x13** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
+You immediately see **x3** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
 
 ### 6.4. What about subsequent re-runs of the same data import (creating "warm client, warm server" conditions)?
 
 The screenshot below shows three subsequent iterations of the same import of Quilt-formatted data:
 
 ![Select all payments using Quilt data package - iterations][quilt-select-all-payments-iterations]
+
+### 6.5. Summary of direct SQL queries using Pandas vs. Quilt data package
+
+| Query engine | Cold client,<br/>cold server (ms) | Warm client<br/>warm server [Average] (ms) |
+| ------ |:------:|:------:|
+| `pd.read_sql()` | 458 | 341, 207, 193 [247] |
+| `import quilt.USR.PKG as pkg` | 126 | 35, 17, 18 [23] |
 
 ### 6.4. Expand our benchmarking
 
