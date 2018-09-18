@@ -305,7 +305,7 @@ Now we are going to do the same operations in Quilt. Following the [docs](https:
 
 ### 6.1. Export the data
 
-Let's export payment data (the highest volume of records) from the Pagila database into a CSV:
+Let's export payment data (the highest volume of records via a simple `SELECT` query with no `JOINS`) from the Pagila database into a CSV:
 
 ```sql
 postgres=# \COPY (SELECT * FROM payment) TO '/path/to/data/interim/payments.csv' DELIMITER ',' CSV HEADER;
@@ -313,11 +313,11 @@ COPY 15635
 Time: 279.119 ms
 ```
 
-Copy `/path/to/data/interim/payments.csv` to the `packages` directory.
+Copy `/path/to/data/interim/payments.csv` to the `/path/to/packages` directory.
 
 ### 6.2. Authenticate to the Quilt registry & generate the data package
 
-In order to generate a data package, we first need to login to the Quilt data registry:
+In order to generate a data package, we first need to login to the Quilt data registry which [requires creating a free account](https://quiltdata.com/signup):
 
 ```bash
 [quilt-py3] $ quilt login
@@ -358,19 +358,21 @@ $ quilt ls
 robnewman/performance          latest               01431940787f667f46c3a0a2056ee0b16f899fc33c1c9db80ff376e337de3571
 ```
 
-### 6.3. Use the data package directly from a notebook
+### 6.3. Use the data package directly from a notebook (create "cold client, cold server" conditions)
 
 Now we're ready to use the data package in our Jupyter notebook. We `import` it just like any other standard Python library and load the data into a Pandas data frame:
 
-!![Select all payments using Quilt data package][quilt-select-all-payments]
+![Select all payments using Quilt data package][quilt-select-all-payments]
 
-The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **37ms**
+The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **35ms**
 
-You immediately see **x2.5** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
+You immediately see **x13** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
 
-### 6.3.1. Another note about caching (Postgres and Quilt)
+### 6.4. What about subsequent re-runs of the same data import (creating "warm client, warm server" conditions)?
 
-Running both queries repeatedly in each respective notebook does change the performance after the initial query due to **caching**. Each successive query takes a slightly different amount of time.
+The screenshot below shows three subsequent iterations of the same import of Quilt-formatted data:
+
+![Select all payments using Quilt data package - iterations][quilt-select-all-payments-iterations]
 
 ### 6.4. Expand our benchmarking
 
@@ -388,6 +390,8 @@ That was a very simple example. Let's take this further, and create some `JOINS`
 
 [sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payments via direct SQL query"
 
-[sql-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments-iterations.png "Select all payments via direct SQL query -- iterations"
+[sql-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/sql-select-all-payments-iterations.png "Select all payments via direct SQL query -- iterations"
 
 [quilt-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
+
+[quilt-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments-iterations.png "Select all payments using Quilt data package -- iterations"
