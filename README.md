@@ -70,7 +70,7 @@ Python 3.6.5
 Finally, install all the Python packages from the `requirements.txt` file in this repository:
 
 ```bash
-[quilt-py3] pip install -r requirements.txt
+[quilt-py3] $ pip install -r requirements.txt
 ```
 
 Now you have all you need to work through the rest of this post, _except_ for the data!
