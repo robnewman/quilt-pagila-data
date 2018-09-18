@@ -315,7 +315,7 @@ The screenshot below shows three subsequent iterations of the same import of Qui
 
 | Query engine | Cold client,<br/>cold server (ms) | Warm client<br/>warm server [Average] (ms) |
 | ------ |:------:|:------:|
-| `pd.read_sql()` | 458 | 341, 207, 193 [247] |
+| `pandas.read_sql()` | 458 | 341, 207, 193 [247] |
 | `import quilt.USR.PKG as pkg` | 126 | 35, 17, 18 [23] |
 
 ### 6.6. More complicated queries
