@@ -45,17 +45,21 @@ To build the virtual environment (called `quilt-py3`) with all the packages used
 
 First, build a new virtual environment called `quilt-py3`:
 
-`$ python3 -m venv ~/path/to/virtual/environments/quilt-py3`
+```bash
+$ python3 -m venv ~/path/to/virtual/environments/quilt-py3
+```
 
 Next, activate the new environment:
 
-`$ source /path/to/virtual/environments/quilt-py3/bin/activate`
+```bash
+$ source /path/to/virtual/environments/quilt-py3/bin/activate
+```
 
 (Depending on how your shell is configured, your command line prompt may automatically update with the virtual environment name as a prefix)
 
 ### 1.2. Check that you have a Python3 interpreter installed
 
-```
+```bash
 [quilt-py3] $ python3 --version
 Python 3.6.5
 ```
@@ -64,7 +68,9 @@ Python 3.6.5
 
 Finally, install all the Python packages from the `requirements.txt` file in this repository:
 
-`[quilt-py3] pip install -r requirements.txt`
+```bash
+[quilt-py3] pip install -r requirements.txt
+```
 
 Now you have all you need to work through the rest of this post, _except_ for the data!
 
@@ -95,11 +101,15 @@ If don't already have Postgres installed on your localhost, download a native Ma
 
 You first need to build the database schema. Run the following from the command line:
 
-`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-schema.sql`
+```bash
+[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-schema.sql
+```
 
 and:
 
-`[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-insert-data.sql`
+```bash
+[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-insert-data.sql
+```
 
 where `/path/to/data/raw/pagila` is your localhost directory path to the Pagila database that you just downloaded.
 
@@ -111,7 +121,7 @@ We now have a complete database that contains the following tables and relations
 
 Let's test that we have the data correctly stored in Postgres  by running some simple queries. This assumes that you have a postgres command line prompt open.
 
-```
+```sql
 SELECT
  customer.customer_id,
  customer.first_name customer_first_name,
@@ -129,7 +139,7 @@ INNER JOIN staff ON payment.staff_id = staff.staff_id;
 
 The results:
 
-```
+```sql
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
 -------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
         269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   1.99 | 2017-01-24 21:40:19.996577-08
@@ -149,7 +159,7 @@ You can do this in a couple of ways:
 
 #### 3.4.1. Add `EXPLAIN ANALYZE` as the first line to your SQL statement
 
-```
+```sql
 EXPLAIN ANALYZE
 SELECT
  customer.customer_id,
@@ -168,7 +178,7 @@ INNER JOIN staff ON payment.staff_id = staff.staff_id;
 
 The output now starts:
 
-```
+```sql
 QUERY PLAN                                                              
 -------------------------------------------------------------------------------------------------------------------------------------
 Hash Join  (cost=40.13..427.17 rows=16995 width=127) (actual time=3.760..29.513 rows=15635 loops=1)
@@ -197,14 +207,14 @@ Execution time: 32.699 ms
 
 You can toggle this functionality on and off using the following command:
 
-```
+```sql
 postgres=# \timing
 Timing is on.
 ```
 
 Lets take a look at the previous SQL command, with the `timing` flag on:
 
-```
+```sql
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
 -------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
         269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   1.99 | 2017-01-24 21:40:19.996577-08
@@ -214,7 +224,7 @@ customer_id | customer_first_name | customer_last_name |                  email 
 Time: 83.096 ms
 ```
 
-Note the ending `Time: 83.096 ms`. That's the nugget of helpful information.
+Note the ending **Time: 83.096 ms**. That's the nugget of helpful information.
 
 ## 4. Query the database using a notebook
 
@@ -224,17 +234,23 @@ Everything prior to now has been correctly setting up our environment, downloadi
 
 To ensure that all the Python packages that you are using from your virtual environment (my current one is called `quilt-py3`, see above) are available in your notebook, you need to make it available as a notebook kernel.
 
-`[quilt-py3] $ ipython kernel install --user --name=quilt-py3`
+```bash
+[quilt-py3] $ ipython kernel install --user --name=quilt-py3
+```
 
 ### 4.2. Ensure your notebook has the ability to benchmark queries
 
 The whole point of this blog post is to benchmark the performance of SQL vs. CSV files vs. Quilt, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. A good one is the  [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension. This displays when the last execution of a code cell occurred, and how long it took. Install the suite of user-contributed Jupyter extensions with the following command:
 
-`[quilt-py3] $ jupyter contrib nbextension install --user`
+```bash
+[quilt-py3] $ jupyter contrib nbextension install --user
+```
 
 To be able to configure your Jupyter notebooks to use this extension, you need to enable the *extension configurator*:
 
-`[quilt-py3] $ jupyter nbextensions_configurator enable --user`
+```bash
+[quilt-py3] $ jupyter nbextensions_configurator enable --user
+```
 
 Now when you start up Jupyter you can select which extensions to enable by checking boxes in the `Nbextensions` tab (<span style="color:red">red box</span>):
 
@@ -264,27 +280,85 @@ In order to correctly benchmark, you need to ensure that all caches are flushed.
 
 2. Run `sync`: Running the `sync` command forces completion of any pending disk writes, essentially **flushing the cache**.
 
+3. Optionally, on OSX run `purge`. This **forces** the disk cache to be purged (flushed and emptied). Typically this is what happens during a system reboot. You need administrator privileges to run this command (via `sudo`).
+
+## 5.2. `pd.read_sql():` Direct SQL performance
+
+A simple query to select all records from the `payment` table takes **311ms**:
+
+![Select all payments][sql-select-all-payments]
+
 ## 6. Create a Quilt package
 
 Now we are going to do the same operations in Quilt. Following the [docs](https://docs.quiltdata.com/get-started/step-by-step#build-a-package), we need to first export the unstructured data from Postgres into a CSV file.
 
 ### 5.1. Export the data
 
-Let's export just the customer data from the Pagila database into a CSV:
+Let's export payment data (the highest volume of records) from the Pagila database into a CSV:
 
+```sql
+postgres=# \COPY (SELECT * FROM payment) TO '/path/to/data/interim/payments.csv' DELIMITER ',' CSV HEADER;
+COPY 15635
+Time: 279.119 ms
 ```
-postgres-# \COPY customer TO '/path/to/repository/data/interim/customers.csv' DELIMITER ',' CSV HEADER;
-COPY 599
-Time: 50.701 ms
+
+Copy `/path/to/data/interim/payments.csv` to the `packages` directory.
+
+### 5.2. Authenticate to the Quilt registry & generate the data package
+
+In order to generate a data package, we first need to login to the Quilt data registry:
+
+```bash
+[quilt-py3] $ quilt login
+Launching a web browser...
+If that didn't work, please visit the following URL: https://pkg.quiltdata.com/login
+
+Enter the code from the webpage:
 ```
+
+And generate the `build.yml` file:
+
+```bash
+[quilt-py3] $ quilt generate packages
+Generated build-file packages/build.yml.
+```
+
+We can take a peak inside `build.yml`:
+
+```yaml
+contents:
+  payments:
+    file: payments.csv
+```
+
+### 5.3. Build the Quilt package
+
+```bash
+[quilt-py3] rnewman@donut2 ~/sandbox/quilt-pagila-data (master) $ quilt build robnewman/payments packages/build.yml
+Inferring 'transform: csv' for payments.csv
+Built robnewman/payments successfully.
+```
+
+We can easily check if the Quilt data package was successfully built with the command `quilt ls` which lists all user packages in the Quilt data registry:
+
+```bash
+$ quilt ls
+/Users/rnewman/Library/Application Support/QuiltCli/quilt_packages
+robnewman/payments             latest               fc05fd571f3b0bc5769cf83b10195ebed9cbc264c0b41cdfbcaa18b58d462dbe
+```
+
+Now we're ready to use the data package in our Jupyter notebook:
+
 
 
 ## References
 
-[pagila_erd]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
+[pagila_erd]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
 
-[notebook_nbextensions]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
+[notebook_nbextensions]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
 
-[notebook_kernel]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
+[notebook_kernel]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
 
-[postgres-app-stop]: https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
+[postgres-app-stop]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
+
+[sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payment"

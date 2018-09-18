@@ -108,3 +108,6 @@ data/*
 
 # src
 src/*
+
+# Mac specific
+.DS_Store
