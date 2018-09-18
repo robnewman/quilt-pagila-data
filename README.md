@@ -284,7 +284,7 @@ In order to correctly benchmark, you need to ensure that all caches are flushed.
 
 ## 5.2. `pd.read_sql():` Direct SQL performance
 
-A simple query to select all records from the `payment` table takes **311ms**:
+A simple SQL query to select all records from the `payment` table and insert into a Panda's dataframe (**15635 rows × 6 columns**) takes **119ms**:
 
 ![Select all payments][sql-select-all-payments]
 
@@ -347,9 +347,13 @@ $ quilt ls
 robnewman/payments             latest               fc05fd571f3b0bc5769cf83b10195ebed9cbc264c0b41cdfbcaa18b58d462dbe
 ```
 
-Now we're ready to use the data package in our Jupyter notebook:
+Now we're ready to use the data package in our Jupyter notebook. We `import` it just like any other standard Python library and load the data into a Pandas data frame:
 
+!![Select all payments using Quilt data package][quilt-select-all-payments]
 
+The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **45ms**
+
+You immediately see **x2.5** performance difference between the Pandas `pd.read_sql()` query and the Quilt conversion into a data frame.
 
 ## References
 
@@ -361,4 +365,6 @@ Now we're ready to use the data package in our Jupyter notebook:
 
 [postgres-app-stop]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
 
-[sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payment"
+[sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payments via direct SQL query"
+
+[quilt-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
