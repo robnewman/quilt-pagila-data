@@ -410,22 +410,22 @@ If your data engineering pipeline could benefit from Quilt data packages, please
 
 ## References
 
-[pagila_erd]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
+[pagila_erd]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/dvd-rental-sample-database-diagram.png "Pagila Entity Relationship Diagram"
 
-[notebook_nbextensions]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
+[notebook_nbextensions]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/notebook-nbextensions.png "Choosing which Nbextensions to enable"
 
-[notebook_kernel]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
+[notebook_kernel]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/notebook-kernel.png "Selecting the notebook kernel"
 
-[postgres-app-stop]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
+[postgres-app-stop]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/postgres-app-stop.png "Stop the PostgreSQL app server"
 
-[sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payments via direct SQL query"
+[sql-select-all-payments]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/sql-select-all-payments.png "Select all payments via direct SQL query"
 
 [sql-select-all-payments-iterations]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/sql-select-all-payments-iterations.png "Select all payments via direct SQL query -- iterations"
 
-[quilt-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
+[quilt-select-all-payments]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
 
-[quilt-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments-iterations.png "Select all payments using Quilt data package -- iterations"
+[quilt-select-all-payments-iterations]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/quilt-select-all-payments-iterations.png "Select all payments using Quilt data package -- iterations"
 
-[sql-outer-join]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/sql-outer-join.png "Large outer join via direct SQL query"
+[sql-outer-join]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/sql-outer-join.png "Large outer join via direct SQL query"
 
-[quilt-outer-join]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/quilt-outer-join.png "Large outer join using Quilt data package"
+[quilt-outer-join]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/quilt-outer-join.png "Large outer join using Quilt data package"
