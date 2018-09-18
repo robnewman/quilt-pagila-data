@@ -103,11 +103,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# data
-data/*
-
 # src
 src/*
+
+# data
+data/*
 
 # Mac specific
 .DS_Store

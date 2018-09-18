@@ -28,17 +28,15 @@ Data engineering projects need a sensible (and repeatable) directory structure. 
 │   └── raw
 ├── notebooks
 ├── packages
-├── requirements.txt
-└── src
-    └── data
+└── requirements.txt
 ```
 
 There are a couple of minor differences to the recommendation:
 
-1. `assets` is where the images for this `README.md` are stored.
+1. `assets/images` is where the screenshots for this `README.md` are stored.
 2. `packages` is where we will store the Quilt data packages that we generate and work with.
 
-The `data/raw` directory stores the data files for building the database we will use during this post.
+The `data/raw` directory stores the data files for building the database we will use during this article.
 
 The `data/interim` directory is where we export CSV files created by our local Postgres SQL queries. We use these as the data sources for our Quilt package.
 
@@ -79,17 +77,14 @@ Now you have all you need to work through the rest of this post, _except_ for th
 
 ## 2. Clone the Pagila database repository
 
-Use `git clone https://github.com/devrimgunduz/pagila.git` to get the Pagila data repository on your localhost. Move the files to the `data > raw` directory, so that the contents of the directory look like:
+Use `git clone https://github.com/devrimgunduz/pagila.git` to get the Pagila data repository on your localhost. Copy the files in the repository to the `data > raw` directory of this repository, so that the contents of the `raw` directory now look like:
 
 ```bash
-data/raw
-└── pagila
-    ├── pagila-0.10.1
-    │   ├── README
-    │   ├── pagila-data.sql
-    │   ├── pagila-insert-data.sql
-    │   └── pagila-schema.sql
-    └── pagila-0.10.1.zip
+raw
+├── README.md
+├── pagila-data.sql
+├── pagila-insert-data.sql
+└── pagila-schema.sql
 ```
 
 ## 3. Create a relational database and add the data
@@ -102,27 +97,44 @@ If don't already have Postgres installed on your localhost, download a native Ma
 
 ### 3.2. Add the Pagila tables to the PostgreSQL default database
 
-You first need to build the database schema. Run the following from the command line, which builds the tables and relations:
+Now we build the database schema and load the data. Run the following from the command line, which builds the tables and relations:
 
 ```bash
-[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-schema.sql
+[quilt-py3] $ "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila-schema.sql
 ```
 
 followed by:
 
 ```bash
-[quilt-py3] "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila/pagila-insert-data.sql
+[quilt-py3] $ "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres" < /path/to/data/raw/pagila-insert-data.sql
 ```
 
-where `/path/to/data/raw/pagila` is your localhost directory path to the Pagila database.
+where `/path/to/data/raw/` is the path to the Pagila SQL files on your localhost.
 
 We now have a complete database that contains the following tables and relationships:
 
 ![Pagila ERD][pagila_erd]
 
-### 3.3. Run some simple queries
+### 3.3. Run some sample queries
 
-Let's test that we have the data correctly stored in Postgres by running some simple SQL queries. This assumes that you have a postgres command line prompt open.
+To confirm we have data loaded into the default `postgres` database let's run some sample SQL queries. First, open Postgres:
+
+```
+[quilt-py3] $ "/Applications/Postgres.app/Contents/Versions/10/bin/psql" -p5432 -d "postgres"
+psql (10.5)
+Type "help" for help.
+
+postgres=#
+```
+
+It's helpful to see how fast your queries take to complete. You can toggle this functionality using the `timing` flag:
+
+```
+postgres=# \timing
+Timing is on.
+```
+
+Now run the following `SELECT` statement:
 
 ```sql
 SELECT
@@ -146,88 +158,13 @@ Screenshot of the partial results:
 customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
 -------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
         269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   1.99 | 2017-01-24 21:40:19.996577-08
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Mike             | Hillyer         |   0.99 | 2017-01-25 15:16:50.996577-08
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   6.99 | 2017-01-28 21:44:14.996577-08
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   0.99 | 2017-01-29 00:58:02.996577-08
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Mike             | Hillyer         |   4.99 | 2017-01-29 08:10:06.996577-08
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   2.99 | 2017-01-31 12:23:14.996577-08
-        270 | LEAH                | CURTIS             | LEAH.CURTIS@sakilacustomer.org           | Mike             | Hillyer         |   1.99 | 2017-01-26 05:10:14.996577-08
-```
-
-Great! We now have all the data loaded and accessible.
-
-### 3.4. Add some simple benchmarking tools to the SQL prompt
-
-You can do this in a couple of ways:
-
-#### 3.4.1. Add `EXPLAIN ANALYZE` as the first line to your SQL statement
-
-```sql
-EXPLAIN ANALYZE
-SELECT
- customer.customer_id,
- customer.first_name customer_first_name,
- customer.last_name customer_last_name,
- customer.email,
- staff.first_name staff_first_name,
- staff.last_name staff_last_name,
- amount,
- payment_date
-FROM
- customer
-INNER JOIN payment ON payment.customer_id = customer.customer_id
-INNER JOIN staff ON payment.staff_id = staff.staff_id;
-```
-
-The output now starts:
-
-```sql
-QUERY PLAN                                                              
--------------------------------------------------------------------------------------------------------------------------------------
-Hash Join  (cost=40.13..427.17 rows=16995 width=127) (actual time=3.760..29.513 rows=15635 loops=1)
-Hash Cond: (payment_p2017_01.staff_id = staff.staff_id)
-->  Hash Join  (cost=22.48..364.35 rows=16995 width=65) (actual time=3.582..21.913 rows=15635 loops=1)
-Hash Cond: (payment_p2017_01.customer_id = customer.customer_id)
-->  Append  (cost=0.00..296.95 rows=16995 width=18) (actual time=0.054..10.099 rows=15635 loops=1)
-->  Seq Scan on payment_p2017_01  (cost=0.00..20.26 rows=1126 width=18) (actual time=0.053..0.682 rows=1126 loops=1)
-->  Seq Scan on payment_p2017_02  (cost=0.00..40.12 rows=2312 width=18) (actual time=0.053..1.441 rows=2312 loops=1)
-->  Seq Scan on payment_p2017_03  (cost=0.00..98.44 rows=5644 width=18) (actual time=0.074..2.948 rows=5644 loops=1)
-->  Seq Scan on payment_p2017_04  (cost=0.00..110.71 rows=6371 width=18) (actual time=0.033..2.861 rows=6371 loops=1)
-->  Seq Scan on payment_p2017_05  (cost=0.00..3.82 rows=182 width=17) (actual time=0.046..0.108 rows=182 loops=1)
-->  Seq Scan on payment_p2017_06  (cost=0.00..23.60 rows=1360 width=24) (actual time=0.013..0.013 rows=0 loops=1)
-->  Hash  (cost=14.99..14.99 rows=599 width=49) (actual time=3.492..3.492 rows=599 loops=1)
-Buckets: 1024  Batches: 1  Memory Usage: 57kB
-->  Seq Scan on customer  (cost=0.00..14.99 rows=599 width=49) (actual time=0.055..0.510 rows=599 loops=1)
-->  Hash  (cost=13.40..13.40 rows=340 width=68) (actual time=0.099..0.099 rows=2 loops=1)
-Buckets: 1024  Batches: 1  Memory Usage: 9kB
-->  Seq Scan on staff  (cost=0.00..13.40 rows=340 width=68) (actual time=0.072..0.074 rows=2 loops=1)
-Planning time: 6.699 ms
-Execution time: 32.699 ms
-(19 rows)
-```
-
-#### 3.4.2. Add the `timing` functionality to the PostgreSQL prompt
-
-You can toggle this functionality on and off using the following command:
-
-```sql
-postgres=# \timing
-Timing is on.
-```
-
-Lets take a look at the previous SQL command, with the `timing` flag on:
-
-```sql
-customer_id | customer_first_name | customer_last_name |                  email                   | staff_first_name | staff_last_name | amount |         payment_date          
--------------+---------------------+--------------------+------------------------------------------+------------------+-----------------+--------+-------------------------------
-        269 | CASSANDRA           | WALTERS            | CASSANDRA.WALTERS@sakilacustomer.org     | Jon              | Stephens        |   1.99 | 2017-01-24 21:40:19.996577-08
         ....        
         284 | SONIA               | GREGORY            | SONIA.GREGORY@sakilacustomer.org         | Jon              | Stephens        |   0.99 | 2017-01-29 14:59:08.996577-08
         286 | VELMA               | LUCAS              | VELMA.LUCAS@sakilacustomer.org           | Jon              | Stephen
 Time: 83.096 ms
 ```
 
-Note the ending **Time: 83.096 ms**. That's a nugget of helpful information.
+Note the helpful message **Time: 83.096 ms**.
 
 ## 4. Query the database using a Jupyter notebook
 
@@ -241,11 +178,11 @@ To ensure that all the Python packages that you are using from your virtual envi
 [quilt-py3] $ ipython kernel install --user --name=quilt-py3
 ```
 
-Now you can `import` Python packages into your notebook from your virtual environment.
+Now you can simply `import` Python packages into your notebook from your virtual environment.
 
 ### 4.2. Ensure your notebook has the ability to benchmark queries
 
-The whole point of this blog post is to benchmark the performance of SQL vs. CSV files vs. Quilt, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. A popular one is the  [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension. This displays (1) when the last execution of a code cell occurred, and (2) how long it took (in milliseconds). Install the suite of user-contributed Jupyter extensions with the following command:
+The whole point of this article is to benchmark the performance of SQL vs. Quilt data packages, so we need to install a [Juypter notebook extension](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) that allows benchmarking. A popular one is the  [ExecuteTime](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions/execute_time) extension. This displays (1) when the last execution of a code cell occurred, and (2) how long it took. Install the suite of user-contributed Jupyter extensions with the following command:
 
 ```bash
 [quilt-py3] $ jupyter contrib nbextension install --user
