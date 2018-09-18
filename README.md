@@ -287,7 +287,7 @@ In order to correctly benchmark, you need to ensure that all caches are flushed.
 
 ## 5.2. `pd.read_sql():` Direct SQL performance
 
-A simple SQL query to select all records from the `payment` table and insert into a Panda's dataframe (**15635 rows × 6 columns**) takes **119ms**:
+A simple SQL query to select all records from the `payment` table and insert into a Panda's dataframe (**15635 rows × 6 columns**) takes **226ms**:
 
 ![Select all payments][sql-select-all-payments]
 
@@ -319,7 +319,7 @@ If that didn't work, please visit the following URL: https://pkg.quiltdata.com/l
 Enter the code from the webpage:
 ```
 
-And generate the `build.yml` file:
+Now generate `build.yml` using the Quilt [generate](https://docs.quiltdata.com/get-started/step-by-step#explicit-builds) command:
 
 ```bash
 [quilt-py3] $ quilt generate packages
@@ -334,12 +334,12 @@ contents:
     file: payments.csv
 ```
 
-### 5.3. Build the Quilt package
+### 5.3. Build your new Quilt package
 
 ```bash
-[quilt-py3] rnewman@donut2 ~/sandbox/quilt-pagila-data (master) $ quilt build robnewman/payments packages/build.yml
+[quilt-py3] $ quilt build robnewman/performance packages/build.yml
 Inferring 'transform: csv' for payments.csv
-Built robnewman/payments successfully.
+Built robnewman/performance successfully.
 ```
 
 We can easily check if the Quilt data package was successfully built with the command `quilt ls` which lists all user packages in the Quilt data registry:
@@ -347,7 +347,7 @@ We can easily check if the Quilt data package was successfully built with the co
 ```bash
 $ quilt ls
 /Users/rnewman/Library/Application Support/QuiltCli/quilt_packages
-robnewman/payments             latest               fc05fd571f3b0bc5769cf83b10195ebed9cbc264c0b41cdfbcaa18b58d462dbe
+robnewman/performance          latest               01431940787f667f46c3a0a2056ee0b16f899fc33c1c9db80ff376e337de3571
 ```
 
 ### 6.3. Use the data package directly from a notebook
@@ -356,9 +356,13 @@ Now we're ready to use the data package in our Jupyter notebook. We `import` it 
 
 !![Select all payments using Quilt data package][quilt-select-all-payments]
 
-The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **45ms**
+The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **37ms**
 
 You immediately see **x2.5** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
+
+### 6.3.1. Another note about caching (Postgres and Quilt)
+
+Running both queries repeatedly in each respective notebook does change the performance after the initial query due to **caching**. Each successive query takes a slightly different amount of time.
 
 ### 6.4. Expand our benchmarking
 
