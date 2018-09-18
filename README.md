@@ -13,7 +13,7 @@ We are going to be using data provided by the [Pagila](https://github.com/devrim
 
 Use `git clone https://www.github.com/robnewman/quilt-pagila-data` to get this repository on your localhost.
 
-## 1.1 Project directory structure
+## 1.1. Project directory structure
 
 Data engineering projects need a sensible (and repeatable) directory structure. This repository follows the recommendations from [Cookie Cutter Data Science](http://drivendata.github.io/cookiecutter-data-science/#directory-structure):
 
