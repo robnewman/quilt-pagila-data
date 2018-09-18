@@ -42,7 +42,7 @@ The `data/raw` directory is where we are storing all the data files for building
 
 The `data/interim` directory is where we are dumping the CSV files created by our SQL queries within Postgres.
 
-### 1.1. Build and activate a new virtual environment
+### 1.2. Build and activate a new virtual environment
 
 To build the virtual environment (called `quilt-py3`) with all the packages used in this post, you need to run the following commands (assuming you have installed Python3 using the [Homebrew](http://brew.sh/) package manager):
 
@@ -60,14 +60,14 @@ $ source /path/to/virtual/environments/quilt-py3/bin/activate
 
 (Depending on how your shell is configured, your command line prompt may automatically update with the virtual environment name as a prefix)
 
-### 1.2. Check that you have a Python3 interpreter installed
+### 1.3. Check that you have a Python3 interpreter installed
 
 ```bash
 [quilt-py3] $ python3 --version
 Python 3.6.5
 ```
 
-### 1.3. Install Python packages
+### 1.4. Install Python packages
 
 Finally, install all the Python packages from the `requirements.txt` file in this repository:
 
