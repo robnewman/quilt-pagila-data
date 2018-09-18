@@ -295,7 +295,7 @@ A simple SQL query to select all records from the `payment` table and insert int
 
 Now we are going to do the same operations in Quilt. Following the [docs](https://docs.quiltdata.com/get-started/step-by-step#build-a-package), we need to first export the unstructured data from Postgres into a CSV file.
 
-### 5.1. Export the data
+### 6.1. Export the data
 
 Let's export payment data (the highest volume of records) from the Pagila database into a CSV:
 
@@ -307,7 +307,7 @@ Time: 279.119 ms
 
 Copy `/path/to/data/interim/payments.csv` to the `packages` directory.
 
-### 5.2. Authenticate to the Quilt registry & generate the data package
+### 6.2. Authenticate to the Quilt registry & generate the data package
 
 In order to generate a data package, we first need to login to the Quilt data registry:
 
@@ -350,13 +350,19 @@ $ quilt ls
 robnewman/payments             latest               fc05fd571f3b0bc5769cf83b10195ebed9cbc264c0b41cdfbcaa18b58d462dbe
 ```
 
+### 6.3. Use the data package directly from a notebook
+
 Now we're ready to use the data package in our Jupyter notebook. We `import` it just like any other standard Python library and load the data into a Pandas data frame:
 
 !![Select all payments using Quilt data package][quilt-select-all-payments]
 
 The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **45ms**
 
-You immediately see **x2.5** performance difference between the Pandas `pd.read_sql()` query and the Quilt conversion into a data frame.
+You immediately see **x2.5** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
+
+### 6.4. Expand our benchmarking
+
+That was a very simple example. Let's take this further, and create some `JOINS` across tables in our direct SQL queries and see how that compares with the same data in a Quilt data package.
 
 ## References
 
