@@ -1,5 +1,7 @@
 contents:
   payments:
     file: payments.csv
+  payments_large_outer_join:
+    file: payments_large_outer_join.csv
   payments_outer_join:
     file: payments_outer_join.csv

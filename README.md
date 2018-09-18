@@ -381,9 +381,95 @@ The screenshot below shows three subsequent iterations of the same import of Qui
 | `pd.read_sql()` | 458 | 341, 207, 193 [247] |
 | `import quilt.USR.PKG as pkg` | 126 | 35, 17, 18 [23] |
 
-### 6.4. Expand our benchmarking
+### 6.4. More complicated queries
 
-That was a very simple example. Let's take this further, and create some `JOINS` across tables in our direct SQL queries and see how that compares with the same data in a Quilt data package.
+That was a very simple example of a `SELECT * FROM table`. Let's create some more complex queries, including `JOINS` across tables, in our direct SQL queries and see how that compares with the same data stored in a Quilt data package.
+
+### 6.4.1. Outer join
+
+When joining two SQL tables, an `INNER JOIN` creates a new view with only the **matching records** from both tables, while an `OUTER JOIN` creates a view with all the records from **both tables**. An `OUTER JOIN` is therefore a way to get a much larger result set (in terms of columns).
+
+The SQL query we are going to run joins all the DVD stores payments (_payment table_) with the details of the customers who made the payments (_customer table_) with the details of the store where the DVD was rented (_store table_) with all the specific DVD rental information (_rental table_):
+
+```SQL
+SELECT *
+FROM payment p
+FULL OUTER JOIN
+customer c ON p.customer_id = c.customer_id
+FULL OUTER JOIN
+store s ON c.store_id = s.store_id
+FULL OUTER JOIN
+address a ON a.address_id = c.address_id
+FULL OUTER JOIN
+rental r ON p.rental_id = r.rental_id
+```
+
+We now have **16052** rows and **35** columns from the Pagila database (with many columns duplicated through our use of `SELECT *`, which you typically wouldn't use in a standard workflow).
+
+### 6.4.2. Pandas read_sql() result
+
+The result from `pandas.read_sql()` takes **1.57s** to run:
+
+![Large outer join via direct SQL query][sql-outer-join]
+
+### 6.4.3. Quilt data package result
+
+Before we test the performance, we need to:
+
+(1) Create a new CSV file from the SQL query
+
+```SQL
+postgres=# \COPY (SELECT * FROM payment p FULL OUTER JOIN \
+customer c ON p.customer_id = c.customer_id FULL OUTER JOIN \
+store s ON c.store_id = s.store_id FULL OUTER JOIN \
+address a ON a.address_id = c.address_id FULL OUTER JOIN \
+rental r ON p.rental_id = r.rental_id) TO \
+'/path/to/data/interim/payments_large_outer_join.csv' DELIMITER ',' CSV HEADER;
+COPY 16052
+Time: 265.567 ms
+```
+
+(2) Copy this new CSV file to our `packages` directory
+
+```bash
+[quilt-py3] $ cp /path/to/data/interim/payments_large_outer_join.csv /path/to/packages/
+```
+
+(3) Regenerate our Quilt data package
+
+```bash
+[quilt-py3] $ quilt generate packages
+```
+
+The resutling new `build.yaml` file:
+
+```yaml
+contents:
+  payments:
+    file: payments.csv
+  payments_large_outer_join:
+    file: payments_large_outer_join.csv
+```
+
+(4) Add a new line to the notebook:
+
+`performance.payments_large_outer_join()`
+
+(4) Under the `Kernel` menu choose `Restart and Run All` in the notebook to ensure we are using the latest package.
+
+The result from `performance.payments_large_outer_join()` takes **138ms**:
+
+![Large outer join using Quilt data package][quilt-outer-join]
+
+This is a **x11** speed improvement.
+
+## Summary
+
+We have demonstrated that Quilt data packages are significantly faster at loading structured data stored in a local Postgres database into a Pandas dataframe than Pandas own internal `read_sql()` method.
+
+We also have a snapshot of the data that our data pipeline team can prepare in advance for the data science team to work with, version, and store separately without worrying querying against the production database. This will keep your database administrators happy.
+
+If your data engineering pipeline could benefit from Quilt data packages, please contact me!
 
 ## References
 
@@ -402,3 +488,7 @@ That was a very simple example. Let's take this further, and create some `JOINS`
 [quilt-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
 
 [quilt-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments-iterations.png "Select all payments using Quilt data package -- iterations"
+
+[sql-outer-join]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/sql-outer-join.png "Large outer join via direct SQL query"
+
+[quilt-outer-join]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/quilt-outer-join.png "Large outer join using Quilt data package"
