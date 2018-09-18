@@ -301,7 +301,7 @@ Now we're ready to use the data package in our Jupyter notebook (`0.2-robnewman-
 
 ![Select all payments using Quilt data package][quilt-select-all-payments]
 
-The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **126ms**
+The equivalent command to insert the Quilt package data into a Panda's dataframe (**15635 rows × 6 columns**) takes **126ms**.
 
 You immediately see **x3** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
 
@@ -318,11 +318,11 @@ The screenshot below shows three subsequent iterations of the same import of Qui
 | `pd.read_sql()` | 458 | 341, 207, 193 [247] |
 | `import quilt.USR.PKG as pkg` | 126 | 35, 17, 18 [23] |
 
-### 6.4. More complicated queries
+### 6.6. More complicated queries
 
 That was a very simple example of a `SELECT * FROM table`. Let's create some more complex queries, including `JOINS` across tables, in our direct SQL queries and see how that compares with the same data stored in a Quilt data package.
 
-### 6.4.1. Outer join
+### 6.6.1. Outer join
 
 When joining two SQL tables, an `INNER JOIN` creates a new view with only the **matching records** from both tables, while an `OUTER JOIN` creates a view with all the records from **both tables**. An `OUTER JOIN` is therefore a way to get a much larger result set (in terms of columns).
 
@@ -343,13 +343,13 @@ rental r ON p.rental_id = r.rental_id
 
 We now have **16052** rows and **35** columns from the Pagila database (with many columns duplicated through our use of `SELECT *`, which you typically wouldn't use in a standard workflow).
 
-### 6.4.2. Pandas read_sql() result
+### 6.6.2. Pandas read_sql() result
 
 The result from `pandas.read_sql()` takes **1.57s** to run:
 
 ![Large outer join via direct SQL query][sql-outer-join]
 
-### 6.4.3. Quilt data package result
+### 6.6.3. Quilt data package result
 
 Before we test the performance, we need to:
 
@@ -400,7 +400,7 @@ The result from `performance.payments_large_outer_join()` takes **138ms**:
 
 This is a **x11** speed improvement.
 
-## Summary
+## 7. Summary
 
 We have demonstrated that Quilt data packages are significantly faster at loading structured data stored in a local Postgres database into a Pandas dataframe than Pandas own internal `read_sql()` method.
 
