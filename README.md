@@ -210,7 +210,7 @@ You will see the kernel update in the top-right of the notebook (<span style="co
 
 ## 5. Benchmarking PostgreSQL
 
-Now we are able to benchmark our PostgreSQL database tables directly within Jupyter. Provided you have cloned this repository, you should be able to do exactly this by opening the `0.1-robnewman-pagila.ipynb` notebook in the `notebooks` directory.
+Now we are able to benchmark our PostgreSQL database queries directly within Jupyter. Provided you have cloned this repository, you should be able to do exactly this by opening the `0.1-robnewman-pagila.ipynb` notebook in the `notebooks` directory. This contains all the native Panda's SQL queries.
 
 ## 5.1. A note on flushing the cache (creating "cold client, cold server" conditions)
 
@@ -297,7 +297,7 @@ robnewman/performance          latest               01431940787f667f46c3a0a2056e
 
 ### 6.3. Use the data package directly from a notebook (create "cold client, cold server" conditions)
 
-Now we're ready to use the data package in our Jupyter notebook. We `import` it just like any other standard Python library and load the data into a Pandas data frame:
+Now we're ready to use the data package in our Jupyter notebook (`0.2-robnewman-pagila-quilt.ipynb` in the repository). We `import` it just like any other standard Python library and load the data into a Pandas data frame:
 
 ![Select all payments using Quilt data package][quilt-select-all-payments]
 
