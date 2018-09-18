@@ -279,7 +279,7 @@ contents:
     file: payments.csv
 ```
 
-### 5.3. Build your new Quilt package
+### 6.3. Build your new Quilt package
 
 ```bash
 [quilt-py3] $ quilt build robnewman/performance packages/build.yml
@@ -295,7 +295,7 @@ $ quilt ls
 robnewman/performance          latest               01431940787f667f46c3a0a2056ee0b16f899fc33c1c9db80ff376e337de3571
 ```
 
-### 6.3. Use the data package directly from a notebook (create "cold client, cold server" conditions)
+### 6.4. Use the data package directly from a notebook (create "cold client, cold server" conditions)
 
 Now we're ready to use the data package in our Jupyter notebook (`0.2-robnewman-pagila-quilt.ipynb` in the repository). We `import` it just like any other standard Python library and load the data into a Pandas data frame:
 
@@ -305,24 +305,24 @@ The equivalent command to insert the Quilt package data into a Panda's dataframe
 
 You immediately see **x3** performance difference between the Pandas `pd.read_sql()` query and the Quilt data package transformation into a Pandas data frame within the notebooks.
 
-### 6.4. What about subsequent re-runs of the same data import (creating "warm client, warm server" conditions)?
+### 6.5. What about subsequent re-runs of the same data import (creating "warm client, warm server" conditions)?
 
 The screenshot below shows three subsequent iterations of the same import of Quilt-formatted data:
 
 ![Select all payments using Quilt data package - iterations][quilt-select-all-payments-iterations]
 
-### 6.5. Summary of direct SQL queries using Pandas vs. Quilt data package
+### 6.6. Summary of direct SQL queries using Pandas vs. Quilt data package
 
 | Query engine | Cold client,<br/>cold server (ms) | Warm client<br/>warm server [Average] (ms) |
 | ------ |:------:|:------:|
 | `pandas.read_sql()` | 458 | 341, 207, 193 [247] |
 | `import quilt.USR.PKG as pkg` | 126 | 35, 17, 18 [23] |
 
-### 6.6. More complicated queries
+### 6.7. More complicated queries
 
 That was a very simple example of a `SELECT * FROM table`. Let's create some more complex queries, including `JOINS` across tables, in our direct SQL queries and see how that compares with the same data stored in a Quilt data package.
 
-### 6.6.1. Outer join
+### 6.7.1. Outer join
 
 When joining two SQL tables, an `INNER JOIN` creates a new view with only the **matching records** from both tables, while an `OUTER JOIN` creates a view with all the records from **both tables**. An `OUTER JOIN` is therefore a way to get a much larger result set (in terms of columns).
 
@@ -343,13 +343,13 @@ rental r ON p.rental_id = r.rental_id
 
 We now have **16052** rows and **35** columns from the Pagila database (with many columns duplicated through our use of `SELECT *`, which you typically wouldn't use in a standard workflow).
 
-### 6.6.2. Pandas read_sql() result
+### 6.7.2. Pandas read_sql() result
 
 The result from `pandas.read_sql()` takes **1.57s** to run:
 
 ![Large outer join via direct SQL query][sql-outer-join]
 
-### 6.6.3. Quilt data package result
+### 6.7.3. Quilt data package result
 
 Before we test the performance, we need to:
 
@@ -378,7 +378,7 @@ Time: 265.567 ms
 [quilt-py3] $ quilt generate packages
 ```
 
-The resutling new `build.yaml` file:
+The resulting new `build.yaml` file:
 
 ```yaml
 contents:
