@@ -2,7 +2,8 @@
 
 ## Goal
 
-Demonstrate how large datasets, which are commonly used in ML and Data Science projects, can be rapidly prepared for analysis using [Quilt](https://www.quiltdata.com) data packages, and how data packages are significantly faster than using a standard Relational Database Management System (RDMS) such as PostgreSQL or MySQL.
+1. Clearly demonstrate how small- to large-datasets, which are commonly used in ML and Data Science projects, can be rapidly and easily prepared for analysis using [Quilt](https://www.quiltdata.com) data packages.
+2. How Quilt data packages are **significantly** faster to load data into Panda's dataframes than using a direct query to a standard Relational Database Management System (RDMS) such as PostgreSQL or MySQL.
 
 ## Data Source
 
