@@ -36,7 +36,7 @@ There are a couple of minor differences to the recommendation:
 1. `assets/images` is where the screenshots for this `README.md` are stored.
 2. `packages` is where we will store the Quilt data packages that we generate and work with.
 
-The `data/raw` directory stores the data files for building the database we will use during this article.
+The `data/raw` directory stores the data files for building and populating the database we will use during this article.
 
 The `data/interim` directory is where we export CSV files created by our local Postgres SQL queries. We use these as the data sources for our Quilt package.
 
