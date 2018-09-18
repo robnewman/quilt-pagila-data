@@ -420,7 +420,7 @@ If your data engineering pipeline could benefit from Quilt data packages, please
 
 [sql-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/sql-select-all-payments.png "Select all payments via direct SQL query"
 
-[sql-select-all-payments-iterations]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/assets/images/sql-select-all-payments-iterations.png "Select all payments via direct SQL query -- iterations"
+[sql-select-all-payments-iterations]:https://github.com/robnewman/quilt-pagila-data/blob/master/assets/images/quilt-select-all-payments-iterations.png "Select all payments via direct SQL query -- iterations"
 
 [quilt-select-all-payments]:https://raw.githubusercontent.com/robnewman/quilt-pagila-data/master/assets/images/quilt-select-all-payments.png "Select all payments using Quilt data package"
 
