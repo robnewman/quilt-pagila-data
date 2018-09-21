@@ -106,8 +106,5 @@ venv.bak/
 # src
 src/*
 
-# data
-data/*
-
 # Mac specific
 .DS_Store
