@@ -390,11 +390,9 @@ This is a **x11** speed improvement.
 
 ## 6. Summary
 
-We have demonstrated that Quilt data packages are significantly faster at loading structured data stored in a local Postgres database into a Pandas dataframe than Pandas own internal `read_sql()` method.
+Determining the optimal balance of time spent in different data environments to generate performant data sets for data science projects is a multi-faceted problem data engineers face every day. This article has demonstrated that Quilt data packages are significantly faster at loading structured data in a local Postgres database into a Pandas dataframe than Pandas own internal `read_sql()` method.
 
-We also have a snapshot of the data that our data pipeline team can prepare in advance for the data science team to work with, version, and store separately without worrying querying against the production database. This will keep your database administrators happy.
-
-If your data engineering pipeline could benefit from Quilt data packages, please contact me!
+Quilt data packages provide a method of generating snapshots of data that bridge the different data environments in a way that satisfies both your database administrators (adhering to the principal of least privilege) and your data scientists (immutable, performant data for feature engineering and model training).
 
 ## References
 
