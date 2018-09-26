@@ -15,7 +15,12 @@ Use `git clone https://www.github.com/robnewman/quilt-pagila-data` to get this r
 
 ### 1.1. Project directory structure
 
-Data engineering projects need a sensible (and repeatable) directory structure. This repository follows the recommendations from [Cookie Cutter Data Science](http://drivendata.github.io/cookiecutter-data-science/#directory-structure):
+We are going to use the [Cookie Cutter Data Science](http://drivendata.github.io/cookiecutter-data-science/#directory-structure) project structure which provides a standardized, clean, and logical structure for data science work, similar in style to web development frameworks like [Django](https://www.djangoproject.com/) or [Ruby on Rails](https://rubyonrails.org/). This is important because:
+
+1. New viewers of your code can immediately understand an analysis without working through extensive documentation
+2. 100% of the code does not have to be reviewed before knowing where to look for specific items
+
+A more in-depth review of why this project structure is helpful can be found on the [projects' Github page](http://drivendata.github.io/cookiecutter-data-science/#why-use-this-project-structure)
 
 ```
 ├── LICENSE
