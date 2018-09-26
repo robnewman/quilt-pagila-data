@@ -20,7 +20,7 @@ We are going to use the [Cookie Cutter Data Science](http://drivendata.github.io
 1. New viewers of your code can immediately understand an analysis without working through extensive documentation
 2. 100% of the code does not have to be reviewed before knowing where to look for specific items
 
-A more in-depth review of why this project structure is helpful can be found on the [projects' Github page](http://drivendata.github.io/cookiecutter-data-science/#why-use-this-project-structure)
+A more in-depth review of why this project structure is helpful can be found on the [projects' Github page](http://drivendata.github.io/cookiecutter-data-science/#why-use-this-project-structure).
 
 ```
 ├── LICENSE
