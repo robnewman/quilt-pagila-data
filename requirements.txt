@@ -6,11 +6,11 @@ mxnet==0.12.1
 numpy==1.13.3
 pbr==4.2.0
 pipenv==2018.7.1
-PyYAML==4.2b1
-requests==2.18.4
+PyYAML>=4.2b1
+requests>=2.20.0
 six==1.11.0
 stevedore==1.29.0
-urllib3==1.22
+urllib3>=1.23
 virtualenv==15.1.0
 virtualenv-clone==0.3.0
 virtualenvwrapper==4.8.2
