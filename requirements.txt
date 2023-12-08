@@ -3,7 +3,7 @@ chardet==3.0.4
 graphviz==0.8.1
 idna==2.6
 mxnet==0.12.1
-numpy==1.13.3
+numpy==1.22.0
 pbr==4.2.0
 pipenv==2018.7.1
 PyYAML>=4.2b1
